@@ -1,23 +1,45 @@
-<script>
-//var x = document.getElementById("demo");
-function getLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition);
-  } else {
-    x.innerHTML = "Geolocation is not supported by this browser.";
-  }
-}
+<html>
+    <body>
+        <span id="lat">
+            <b>Latitude:</b>
+        </span>
+        <br>
+        <span id="long">
+            <b>Longitude:</b>
+        </span>
+        <br>
+        <span id="url"></span>
+        <br>
+        <br>
+        <button id="btn">Get Location</button>
+        <br>
+        <small>Image service powered by <a href="https://thum.io/">https://thum.io/</a></small>
+        <img src="" id="map" alt="Map Loading...." style="display: none;">
+        <script>
+            function getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(showPosition);
+                }
+                else {
+                    alert("Geolocation support is blocked.");
+                }
+            }
 
-function showPosition(position) {
-  document.write("Latitude: " + position.coords.latitude +
-  "<br>Longitude: " + position.coords.longitude);
+            function showPosition(position) {
+                let url = `https://maps.google.com/?q=${position.coords.latitude},${position.coords.longitude}`; //URL to Google Maps
+                
+                document.getElementById("lat").innerHTML += position.coords.latitude
+                document.getElementById("long").innerHTML += position.coords.longitude
 
-  document.write("<br/><a href='https://maps.google.com/?q=" + position.coords.latitude +
-  "," + position.coords.longitude + "'>Go to Location</a>");
+                document.getElementById("url").innerHTML = `<a href='${url}'>View in Google Maps</a>`;
 
-  //https://maps.google.com/?q=24.8400248,67.0796626
+                let map = document.getElementById("map");
+                map.src = `http://image.thum.io/get/width/1366/crop/768/${url}`;
+                map.style.display = "block";
+                // I tried using google maps API iframe but it didn't work since I can not give away my API Key.
+            }
 
-}
-
-getLocation();
-</script>
+            document.getElementById("btn").addEventListener("click", getLocation);
+        </script>
+    </body>
+</html>
